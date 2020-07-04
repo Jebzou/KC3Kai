@@ -11,11 +11,11 @@
 	</head>
 	<body>
 		<div id="critical" class="anim1"></div>
-		
+
 		<!-- MAIN LAYOUT -->
 		<div class="wrapper">
 			<div class="wrapper_bg"></div>
-			
+
 			<!-- Module: Admiral Info -->
 			<div class="module admiral">
 				<div class="admiral_level">
@@ -29,14 +29,15 @@
 				<div class="admiral_comm"></div>
 				<div class="admiral_rank hover"></div>
 			</div>
-			
+
 			<!-- Module: Activity Box -->
 			<div class="module activity">
 				<div class="activity_tabs">
-					<div id="atab_basic" class="activity_tab hover active i18n" data-target="basic">NatsuiroBasic</div>
-					<div id="atab_battle" class="activity_tab hover i18n" data-target="battle">NatsuiroBattle</div>
-					<div id="atab_expeditionPlanner" class="activity_tab hover i18n" data-target="expeditionPlanner">NatsuiroExped</div>
-					<div id="atab_activity" class="activity_tab i18n" data-target="">NatsuiroActivity</div>
+					<div id="atab_basic" class="activity_tab hover active i18n tab_count_5" data-target="basic">NatsuiroBasic</div>
+					<div id="atab_battle" class="activity_tab hover i18n tab_count_5" data-target="battle">NatsuiroBattle</div>
+					<div id="atab_quest" class="activity_tab hover i18n tab_count_5" data-target="quest">NatsuiroQuest</div>
+					<div id="atab_expeditionPlanner" class="activity_tab hover i18n tab_count_5" data-target="expeditionPlanner">NatsuiroExped</div>
+					<div id="atab_activity" class="activity_tab i18n tab_count_5" data-target="">NatsuiroActivity</div>
 				</div>
 				<div class="activity_body">
 					<div class="activity_box activity_expeditionPlanner">
@@ -58,6 +59,8 @@
 											<li class="expedition_entry" data-exp-id="101">A2</li>
 											<li class="expedition_entry" data-exp-id="102">A3</li>
 											<li class="expedition_entry" data-exp-id="103">A4</li>
+											<li class="expedition_entry" data-exp-id="104">A5</li>
+											<li class="expedition_entry" data-exp-id="105">A6</li>
 										</ul>
 									</li>
 									<li><span class="i18n">MapNameWorld2</span>
@@ -74,6 +77,7 @@
 											<li class="expedition_entry" data-exp-id="111">B2</li>
 											<li class="expedition_entry" data-exp-id="112">B3</li>
 											<li class="expedition_entry" data-exp-id="113">B4</li>
+											<li class="expedition_entry" data-exp-id="114">B5</li>
 										</ul>
 									</li>
 									<li><span class="i18n">MapNameWorld3</span>
@@ -94,6 +98,7 @@
 											<li class="expedition_entry" data-exp-id="42">42</li>
 											<li class="expedition_entry" data-exp-id="43">43</li>
 											<li class="expedition_entry" data-exp-id="44">44</li>
+											<li class="expedition_entry" data-exp-id="45">45</li>
 										</ul>
 									</li>
 									<li><span class="i18n">MapNameWorld4</span>
@@ -106,6 +111,8 @@
 											<li class="expedition_entry" data-exp-id="30">30</li>
 											<li class="expedition_entry" data-exp-id="31">31</li>
 											<li class="expedition_entry" data-exp-id="32">32</li>
+											<li class="expedition_entry" data-exp-id="131">D1</li>
+											<li class="expedition_entry" data-exp-id="132">D2</li>
 										</ul>
 									</li>
 									<li><span class="i18n">MapNameWorld5</span>
@@ -118,6 +125,7 @@
 											<li class="expedition_entry" data-exp-id="38">38</li>
 											<li class="expedition_entry" data-exp-id="39">39</li>
 											<li class="expedition_entry" data-exp-id="40">40</li>
+											<li class="expedition_entry" data-exp-id="141">E1</li>
 										</ul>
 									</li>
 								</ul>
@@ -171,23 +179,37 @@
 								</div>
 							</div>
 							<div class="expPlanner_checker_criterias">
-								<div class="requirements_textbox expPlanner_text i18n hasTotalLv">ExpedTotalLv</div>
-								<div class="requirements_textbox expPlanner_text_passed fleetLv hasTotalLv">?</div>
-								<div class="requirements_textbox expPlanner_text i18n hasTotalAsw">ExpedTotalAsw</div>
-								<div class="requirements_textbox expPlanner_text_passed totalAsw hasTotalAsw">?</div>
-								<div class="requirements_textbox expPlanner_text i18n hasTotalAa">ExpedTotalAa</div>
-								<div class="requirements_textbox expPlanner_text_passed totalAa hasTotalAa">?</div>
-								<div class="requirements_textbox expPlanner_text i18n hasTotalLos">ExpedTotalLos</div>
-								<div class="requirements_textbox expPlanner_text_passed totalLos hasTotalLos">?</div>
-								<div class="requirements_textbox expPlanner_text i18n hasTotalFp">ExpedTotalFp</div>
-								<div class="requirements_textbox expPlanner_text_passed totalFp hasTotalFp">?</div>
+								<div class="requirements">
+									<div class="requirements_textbox expPlanner_text i18n hasTotalLv">ExpedTotalLv</div>
+									<div class="requirements_textbox expPlanner_text_passed fleetLv hasTotalLv">?</div>
+								</div>
+								<div class="requirements">
+									<div class="requirements_textbox expPlanner_text i18n hasTotalFp">ExpedTotalFp</div>
+									<div class="requirements_textbox expPlanner_text_passed totalFp hasTotalFp">?</div>
+								</div>
+								<div class="requirements">
+									<div class="requirements_textbox expPlanner_text i18n hasTotalTorp">ExpedTotalTorp</div>
+									<div class="requirements_textbox expPlanner_text_passed totalTorp hasTotalTorp">?</div>
+								</div>
+								<div class="requirements">
+									<div class="requirements_textbox expPlanner_text i18n hasTotalAa">ExpedTotalAa</div>
+									<div class="requirements_textbox expPlanner_text_passed totalAa hasTotalAa">?</div>
+								</div>
+								<div class="requirements">
+									<div class="requirements_textbox expPlanner_text i18n hasTotalAsw">ExpedTotalAsw</div>
+									<div class="requirements_textbox expPlanner_text_passed totalAsw hasTotalAsw">?</div>
+								</div>
+								<div class="requirements">
+									<div class="requirements_textbox expPlanner_text i18n hasTotalLos">ExpedTotalLos</div>
+									<div class="requirements_textbox expPlanner_text_passed totalLos hasTotalLos">?</div>
+								</div>
 								<div class="expPlanner_req_fleetComposition">
 									<div class="requirements_textbox expPlanner_text_passed">?</div>
 								</div>
 							</div>
 							<div class="expPlanner_checker_criterias canister_criterias">
 								<div class="canisterNum expPlanner_text_passed requirements_textbox">?</div>
-								<div class="expPlanner_text requirements_textbox i18n">ExpedCanister</div> 
+								<div class="expPlanner_text requirements_textbox i18n">ExpedCanister</div>
 								<div class="canisterShipNum expPlanner_text_failed requirements_textbox">?</div>
 								<div class="expPlanner_text requirements_textbox i18n">ExpedShips</div>
 							</div>
@@ -262,94 +284,139 @@
 								<div class="consumable_ltext count_bauxite">300000</div>
 								<div class="clear"></div>
 							</div>
-							<div class="consumable page3">
+							<div class="consumable page3 itemPage">
 								<div class="consumable_icon"><img src="../../../../assets/img/useitems/61.png" /></div>
-								<div class="consumable_ltext count_1classMedalsOrEvent">99</div>
+								<div class="consumable_ltext count_eventItemOrPresent">99</div>
 								<div class="clear"></div>
 							</div>
-							<div class="consumable page3">
+							<div class="consumable page3 itemPage">
 								<div class="consumable_icon"><img src="../../../../assets/img/useitems/57.png" /></div>
 								<div class="consumable_ltext count_medals">99</div>
 								<div class="clear"></div>
 							</div>
-							<div class="consumable page3">
-								<div class="consumable_icon"><img src="../../../../assets/img/useitems/58.png" /></div>
-								<div class="consumable_ltext count_blueprints">99</div>
+							<div class="consumable page3 itemPage">
+								<div class="consumable_icon"><img src="../../../../assets/img/useitems/61.png" /></div>
+								<div class="consumable_ltext count_firstClassMedals">99</div>
 								<div class="clear"></div>
 							</div>
-							<div class="consumable page3">
-								<div class="consumable_icon"><img src="../../../../assets/img/useitems/75.png" /></div>
-								<div class="consumable_ltext count_newGunMats">99</div>
+							<div class="consumable page3 itemPage">
+								<div class="consumable_icon"><img src="../../../../assets/img/useitems/50.png" /></div>
+								<div class="consumable_ltext count_repair">99</div>
 								<div class="clear"></div>
 							</div>
-							<div class="consumable page3">
-								<div class="consumable_icon"><img src="../../../../assets/img/useitems/77.png" /></div>
-								<div class="consumable_ltext count_newAvMats">99</div>
+							<div class="consumable page3 itemPage">
+								<div class="consumable_icon"><img src="../../../../assets/img/useitems/91.png" /></div>
+								<div class="consumable_ltext count_emergencyRepair">99</div>
 								<div class="clear"></div>
 							</div>
-							<div class="consumable page3">
-								<div class="consumable_icon"><img src="../../../../assets/img/useitems/78.png" /></div>
-								<div class="consumable_ltext count_actionReportOrSkilledCrew">99</div>
+							<div class="consumable page3 itemPage">
+								<div class="consumable_icon"><img src="../../../../assets/img/useitems/67.png" /></div>
+								<div class="consumable_ltext count_supply">99</div>
 								<div class="clear"></div>
 							</div>
-							<div class="consumable page3">
+							<div class="consumable page3 itemPage">
 								<div class="consumable_icon"><img src="../../../../assets/img/useitems/64.png" /></div>
-								<div class="consumable_ltext count_reinforcement">99</div>
+								<div class="consumable_ltext count_reinforceExpansion">99</div>
 								<div class="clear"></div>
 							</div>
-							<div class="consumable page3">
+							<div class="consumable page3 itemPage">
 								<div class="consumable_icon"><img src="../../../../assets/img/useitems/52.png" /></div>
-								<div class="consumable_ltext count_fairy">99</div>
+								<div class="consumable_ltext count_furnitureFairy">99</div>
 								<div class="clear"></div>
 							</div>
-							<div class="consumable page3">
+							<div class="consumable page3 itemPage">
 								<div class="consumable_icon"><img src="../../../../assets/img/useitems/54.png" /></div>
 								<div class="consumable_ltext count_morale">198</div>
 								<div class="clear"></div>
 							</div>
-							<div class="consumable page4">
+							<div class="consumable page4 itemPage">
+								<div class="consumable_icon"><img src="/assets/img/useitems/70.png" /></div>
+								<div class="consumable_ltext count_skilledCrew">0</div>
+								<div class="clear"></div>
+							</div>
+							<div class="consumable page4 itemPage">
+								<div class="consumable_icon"><img src="/assets/img/useitems/65.png" /></div>
+								<div class="consumable_ltext count_protoCatapult">0</div>
+								<div class="clear"></div>
+							</div>
+							<div class="consumable page4 itemPage">
+								<div class="consumable_icon"><img src="/assets/img/useitems/71.png" /></div>
+								<div class="consumable_ltext count_nEngine">0</div>
+								<div class="clear"></div>
+							</div>
+							<div class="consumable page4 itemPage">
+								<div class="consumable_icon"><img src="/assets/img/useitems/75.png" /></div>
+								<div class="consumable_ltext count_newArtilleryMaterial">0</div>
+								<div class="clear"></div>
+							</div>
+							<div class="consumable page4 itemPage">
+								<div class="consumable_icon"><img src="/assets/img/useitems/77.png" /></div>
+								<div class="consumable_ltext count_newAviationMaterial">0</div>
+								<div class="clear"></div>
+							</div>
+							<div class="consumable page4 itemPage">
+								<div class="consumable_icon"><img src="/assets/img/useitems/92.png" /></div>
+								<div class="consumable_ltext count_newRocketDevMaterial">0</div>
+								<div class="clear"></div>
+							</div>
+							<div class="consumable page4 itemPage">
+								<div class="consumable_icon"><img src="/assets/img/useitems/74.png" /></div>
+								<div class="consumable_ltext count_newAircraftBlueprint">0</div>
+								<div class="clear"></div>
+							</div>
+							<div class="consumable page4 itemPage">
+								<div class="consumable_icon"><img src="/assets/img/useitems/78.png" /></div>
+								<div class="consumable_ltext count_actionReport">0</div>
+								<div class="clear"></div>
+							</div>
+							<div class="consumable page4 itemPage">
+								<div class="consumable_icon"><img src="/assets/img/useitems/58.png" /></div>
+								<div class="consumable_ltext count_blueprints">0</div>
+								<div class="clear"></div>
+							</div>
+							<div class="consumable page5 itemPage">
 								<div class="consumable_icon"><img src="/assets/img/useitems/85.png" /></div>
 								<div class="consumable_ltext count_rice">0</div>
 								<div class="clear"></div>
 							</div>
-							<div class="consumable page4">
+							<div class="consumable page5 itemPage">
 								<div class="consumable_icon"><img src="/assets/img/useitems/86.png" /></div>
 								<div class="consumable_ltext count_umeboshi">0</div>
 								<div class="clear"></div>
 							</div>
-							<div class="consumable page4">
+							<div class="consumable page5 itemPage">
 								<div class="consumable_icon"><img src="/assets/img/useitems/87.png" /></div>
 								<div class="consumable_ltext count_nori">0</div>
 								<div class="clear"></div>
 							</div>
-							<div class="consumable page4">
+							<div class="consumable page5 itemPage">
 								<div class="consumable_icon"><img src="/assets/img/useitems/88.png" /></div>
 								<div class="consumable_ltext count_tea">0</div>
 								<div class="clear"></div>
 							</div>
-							<div class="consumable page4">
+							<div class="consumable page5 itemPage">
 								<div class="consumable_icon"><img src="/assets/img/useitems/89.png" /></div>
 								<div class="consumable_ltext count_dinnerTicket">0</div>
 								<div class="clear"></div>
 							</div>
-							<div class="consumable page4">
-								<div class="consumable_icon"><img src="/assets/img/useitems/69.png" /></div>
-								<div class="consumable_ltext count_mackerelCan">0</div>
+							<div class="consumable page5 itemPage">
+								<div class="consumable_icon"><img src="/assets/img/useitems/62.png" /></div>
+								<div class="consumable_ltext count_hishimochi">0</div>
 								<div class="clear"></div>
 							</div>
-							<div class="consumable page4">
-								<div class="consumable_icon"><img src="/assets/img/useitems/66.png" /></div>
-								<div class="consumable_ltext count_ration">0</div>
+							<div class="consumable page5 itemPage">
+								<div class="consumable_icon"><img src="/assets/img/useitems/68.png" /></div>
+								<div class="consumable_ltext count_mackerel">0</div>
 								<div class="clear"></div>
 							</div>
-							<div class="consumable page4">
-								<div class="consumable_icon"><img src="/assets/img/useitems/76.png" /></div>
-								<div class="consumable_ltext count_rationSpecial">0</div>
+							<div class="consumable page5 itemPage">
+								<div class="consumable_icon"><img src="/assets/img/useitems/93.png" /></div>
+								<div class="consumable_ltext count_sardine">0</div>
 								<div class="clear"></div>
 							</div>
-							<div class="consumable page4">
-								<div class="consumable_icon"><img src="/assets/img/useitems/65.png" /></div>
-								<div class="consumable_ltext count_protoCatapult">0</div>
+							<div class="consumable page5 itemPage">
+								<div class="consumable_icon"><img src="/assets/img/useitems/90.png" /></div>
+								<div class="consumable_ltext count_setsubunBeans">0</div>
 								<div class="clear"></div>
 							</div>
 							<div class="clear"></div>
@@ -441,7 +508,7 @@
 							<div class="clear"></div>
 						</div>
 						<div class="node_types node_type_battle">
-							
+
 							<div class="abyss_single">
 								<div class="sink_icons">
 									<div class="sunk sunk_1"><img src="../../../../assets/img/client/sunk.png" /></div>
@@ -471,7 +538,7 @@
 									<div class="clear"></div>
 								</div>
 							</div>
-							
+
 							<div class="abyss_combined">
 								<div class="abyss_fleet abyss_fleet_1">
 									<div class="sink_icons">
@@ -488,32 +555,32 @@
 											<div class="abyss_hp_bar abyss_hp_bar_1"></div>
 										</div>
 										<div class="abyss_ship abyss_ship_1"><img/></div>
-										
+
 										<div class="abyss_hp abyss_hp_2">
 											<div class="abyss_hp_bar abyss_hp_bar_2"></div>
 										</div>
 										<div class="abyss_ship abyss_ship_2"><img/></div>
-										
+
 										<div class="abyss_hp abyss_hp_3">
 											<div class="abyss_hp_bar abyss_hp_bar_3"></div>
 										</div>
 										<div class="abyss_ship abyss_ship_3"><img/></div>
-										
+
 										<div class="abyss_hp abyss_hp_4">
 											<div class="abyss_hp_bar abyss_hp_bar_4"></div>
 										</div>
 										<div class="abyss_ship abyss_ship_4"><img/></div>
-										
+
 										<div class="abyss_hp abyss_hp_5">
 											<div class="abyss_hp_bar abyss_hp_bar_5"></div>
 										</div>
 										<div class="abyss_ship abyss_ship_5"><img/></div>
-										
+
 										<div class="abyss_hp abyss_hp_6">
 											<div class="abyss_hp_bar abyss_hp_bar_6"></div>
 										</div>
 										<div class="abyss_ship abyss_ship_6"><img/></div>
-										
+
 										<div class="clear"></div>
 									</div>
 								</div>
@@ -532,37 +599,37 @@
 											<div class="abyss_hp_bar abyss_hp_bar_7"></div>
 										</div>
 										<div class="abyss_ship abyss_ship_7"><img/></div>
-										
+
 										<div class="abyss_hp abyss_hp_8">
 											<div class="abyss_hp_bar abyss_hp_bar_8"></div>
 										</div>
 										<div class="abyss_ship abyss_ship_8"><img/></div>
-										
+
 										<div class="abyss_hp abyss_hp_9">
 											<div class="abyss_hp_bar abyss_hp_bar_9"></div>
 										</div>
 										<div class="abyss_ship abyss_ship_9"><img/></div>
-										
+
 										<div class="abyss_hp abyss_hp_10">
 											<div class="abyss_hp_bar abyss_hp_bar_10"></div>
 										</div>
 										<div class="abyss_ship abyss_ship_10"><img/></div>
-										
+
 										<div class="abyss_hp abyss_hp_11">
 											<div class="abyss_hp_bar abyss_hp_bar_11"></div>
 										</div>
 										<div class="abyss_ship abyss_ship_11"><img/></div>
-										
+
 										<div class="abyss_hp abyss_hp_12">
 											<div class="abyss_hp_bar abyss_hp_bar_12"></div>
 										</div>
 										<div class="abyss_ship abyss_ship_12"><img/></div>
-										
+
 										<div class="clear"></div>
 									</div>
 								</div>
 							</div>
-							
+
 							<div class="battle_flags">
 								<div class="battle_flag battle_eformation"><img/></div>
 								<div class="battle_flag battle_support">
@@ -652,17 +719,42 @@
 							<div class="clear"></div>
 						</div>
 						<div class="node_types node_type_text">
-							
+
+						</div>
+					</div>
+					<!-- QUEST -->
+					<div class="activity_box activity_quest">
+						<div class="quest_filters">
+							<div class="quest_filter_button i18n_title" filter="1" title="QuestFilterSortie">
+								<div></div>
+							</div>
+							<div class="quest_filter_button i18n_title" filter="2" title="QuestFilterPvP">
+								<div></div>
+							</div>
+							<div class="quest_filter_button i18n_title" filter="3" title="QuestFilterExped">
+								<div></div>
+							</div>
+							<div class="quest_filter_button i18n_title" filter="4" title="QuestFilterArsenal">
+								<div></div>
+							</div>
+							<div class="quest_filter_button i18n_title" filter="5" title="QuestFilterOthers">
+								<div></div>
+							</div>
+						</div>
+						<div class="quest_list">
 						</div>
 					</div>
 					<!-- CRAFTING: New item result details -->
 					<div class="activity_box activity_crafting activity_dismissable">
-						<div class="equipIcon"><img/></div>
-						<div class="equipName"></div>
-						<div class="clear"></div>
-						<div class="equipNote">Sample note Sample note Sample note Sample note Sample noteSample note Sample note</div>
-						<div class="equipStats">
-							
+						<div class="equipItems">
+							<div class="equipItem first">
+								<div class="equipIcon"><img/></div>
+								<div class="equipName"></div>
+								<div class="clear"></div>
+								<div class="equipNote"></div>
+								<div class="equipStats"></div>
+								<div class="clear"></div>
+							</div>
 						</div>
 						<div class="equipResources">
 							<div class="equipResource">
@@ -686,6 +778,13 @@
 								<div class="clear"></div>
 							</div>
 							<div class="clear"></div>
+						</div>
+						<div class="equipFooter">
+							<span class="multiCount">x3</span>
+							<img src="/assets/img/client/devmat.png"/>
+							<span class="devmatsBefore">3000</span>
+							<img src="/assets/img/ui/arrow.png"/>
+							<span class="devmatsAfter">2997</span>
 						</div>
 					</div>
 					<!-- MODERNIZATION: Results -->
@@ -751,7 +850,7 @@
 					</div>
 					<!-- CONSTRUCTION: Ship -->
 					<div class="activity_box activity_construction activity_dismissable">
-						
+
 					</div>
 					<!-- EXPEDITION: Results -->
 					<div class="activity_box activity_expedition activity_dismissable">
@@ -865,7 +964,7 @@
 							<div class="equip">
 								<div class="equipList"></div>
 								<div class="clear"></div>
-							</div>							
+							</div>
 							<div class="landing">
 								<div class="landingList"></div>
 								<div class="clear"></div>
@@ -980,37 +1079,38 @@
 							</div>
 						</div>
 					</div>
-					
+
 					<!-- end activity boxes -->
 				</div>
 			</div>
-			
+
 			<!-- Module: Quests -->
 			<div class="module quests">
-				
+
 			</div>
-			
+
 			<!-- Module: Controls -->
 			<div class="module controls">
 				<div class="control hover fleet_num active">1</div>
 				<div class="control hover fleet_num">2</div>
 				<div class="control hover fleet_num">3</div>
 				<div class="control hover fleet_num">4</div>
-				<div class="control hover fleet_rengo i18n_title" title="CombinedFleet"><img src="../../../../assets/img/ui/rengo.png" /></div>
+				<div class="control hover fleet_rengo i18n_title" title="CombinedFleet"><img src="../../../../assets/img/ui/rengo_none.png" /></div>
 				<div class="control hover fleet_lbas"><img src="../../../../assets/img/items/33.png" /></div>
-				
+
 				<div class="control hover scroll_btn scroll_left disabled"></div>
-				<div class="control scrollable">
+				<div class="control control_btns scrollable">
 					<div class="control hover control_btn btn_mute i18n_title" title="PanelToggleSounds"><img src="../../../../assets/img/ui/mute.png" /></div>
-					<div class="control hover control_btn btn_resize i18n_title" title="PanelFitWindow"><img src="../../../../assets/img/ui/fit.png" /></div>
+					<div class="control hover control_btn btn_alert_toggle i18n_title" title="PanelToggleAlert"><img src="../../../../assets/img/ui/alert.png" /></div>
 					<div class="control hover control_btn btn_ss1 i18n_title" title="Screenshot"><img src="../../../../assets/img/ui/cam1.png" /></div>
+					<div class="control hover control_btn btn_resize i18n_title" title="PanelFitWindow"><img src="../../../../assets/img/ui/fit.png" /></div>
 					<div class="control hover control_btn btn_export i18n_title" title="PanelExportToKCDB"><img src="../../../../assets/img/ui/exportdeck.png" /></div>
 					<div class="control hover control_btn btn_reload_quotes i18n_title" title="PanelReloadQuotes"><img src="../../../../assets/img/ui/reload_quotes.png" /></div>
 					<div class="control hover control_btn btn_reload_quests i18n_title" title="PanelReloadQuests"><img src="../../../../assets/img/ui/reload_quests.png" /></div>
 				</div>
 				<div class="control hover scroll_btn scroll_right"></div>
 			</div>
-			
+
 			<!-- Module: Fleet Summary -->
 			<div class="module summary">
 				<div class="summary_box summary-level">
@@ -1040,26 +1140,26 @@
 					<div class="clear"></div>
 				</div>
 			</div>
-			
+
 			<!-- Module: Ship List -->
 			<div class="module fleet">
 				<div class="shiplist shiplist_single">
-					
+
 				</div>
 				<div class="shiplist shiplist_combined">
 					<div class="shiplist_combined_fleet shiplist_main">
-						
+
 					</div>
 					<div class="shiplist_combined_fleet shiplist_escort">
-						
+
 					</div>
 					<div class="clear"></div>
 				</div>
 				<div class="shiplist airbase_list">
-					
+
 				</div>
 			</div>
-			
+
 			<!-- Module: Status Reminders -->
 			<div class="module status">
 				<!-- Resupply Status -->
@@ -1082,7 +1182,7 @@
 				</div>
 				<!-- Combine Capability -->
 				<div class="status_box status_butai hover">
-					<div class="status_icon"><img src="../../../../assets/img/ui/fleet.png" /></div>
+					<div class="status_icon"><img src="../../../../assets/img/ui/fleet_single.png" /></div>
 					<div class="status_text"></div>
 					<div class="clear"></div>
 				</div>
@@ -1106,10 +1206,10 @@
 				</div>
 				<div class="clear"></div>
 			</div>
-			
+
 		</div>
-		
-		
+
+
 		<!-- CAT BOMB MODAL -->
 		<div id="catBomb" class="modalBox">
 			<div class="blackFilter"></div>
@@ -1122,8 +1222,8 @@
 				<div class="download i18n hover">DownloadErrorReport</div>
 			</div>
 		</div>
-		
-		
+
+
 		<!-- GAME UPDATE MODAL -->
 		<div id="gameUpdate" class="modalBox">
 			<div class="blackFilter"></div>
@@ -1138,18 +1238,18 @@
 				</div>
 			</div>
 		</div>
-		
-		
+
+
 		<!-- CLONABLES -->
 		<div id="factory">
-			
+
 			<!-- Clonable: Quest Record -->
 			<div class="quest">
 				<div class="quest_color"></div>
 				<div class="quest_text">Daily Equipment Modernization 1</div>
 				<div class="quest_track">00/00</div>
 			</div>
-			
+
 			<!-- Clonable: Long Ship -->
 			<div class="lship">
 				<div class="ex_item">
@@ -1168,6 +1268,7 @@
 					</div>
 					<div class="ship_hp_box">
 						<div class="ship_hp_bar">
+							<div class="ship_hp_bar_metrics"></div>
 							<div class="ship_hp_prediction"></div>
 							<div class="ship_hp_pred_value">
 								<span class="ship_hp_diff"></span>
@@ -1240,7 +1341,7 @@
 				</div>
 				<div class="ship_no_lock"></div>
 			</div>
-			
+
 			<!-- Clonable: Short Ship -->
 			<div class="sship">
 				<div class="ship_img"><img/></div>
@@ -1259,6 +1360,7 @@
 						</div>
 						<div class="ship_hp_box">
 							<div class="ship_hp_bar">
+								<div class="ship_hp_bar_metrics"></div>
 								<div class="ship_hp_prediction"></div>
 							</div>
 						</div>
@@ -1281,10 +1383,10 @@
 				<div class="equipStatText"></div>
 				<div class="clear"></div>
 			</div>
-			
+
 			<!-- Ship requirement for expedition checker -->
 			<div class="expPlanner_shipReqBox requirements_textbox expPlanner_text_passed"></div>
-			
+
 			<!-- Clonable: Gunfit / AACI patterns -->
 			<div class="aaciPattern">
 				<div class="apiId"></div>
@@ -1306,7 +1408,7 @@
 				<div class="power nightPower"><img src="/assets/img/ui/dark_yasen.png" /><span class="value"></span></div>
 				<div class="power modifiers"><img src="/assets/img/ui/export.png" /></div>
 			</div>
-			
+
 			<!-- Clonable: PvP enemy list -->
 			<div class="pvpEnemyInfo">
 				<div class="pvp_enemy_pic"><img/></div>
@@ -1325,7 +1427,7 @@
 				<div class="pvp_fleet_ship_level"><div class="i18n">LevelShort</div><div class="value"></div></div>
 				<div class="pvp_fleet_ship_star"><span class="star">&#9733;</span><span class="value"></span></div>
 			</div>
-			
+
 			<!-- Clonable: Remodel item list -->
 			<div class="remodelSlotItem">
 				<div class="remodel_slot_itemon hover"><img/></div>
@@ -1368,10 +1470,10 @@
 					<div class="airbase_info base_action"></div>
 				</div>
 				<div class="base_planes">
-					
+
 				</div>
 			</div>
-			
+
 			<!-- Clonable: LBAS Plane -->
 			<div class="airbase_plane">
 				<div class="base_plane_col base_plane_img name_toggle_group"><img/></div>
@@ -1382,7 +1484,7 @@
 				<div class="base_plane_col base_plane_count name_toggle_group"></div>
 				<div class="base_plane_col base_plane_cond name_toggle_group"><img/></div>
 			</div>
-			
+
 			<!-- Clonable: ShipBox face icon tooltip -->
 			<div class="ship_face_tooltip_outer">
 				<div class="ship_face_tooltip">
@@ -1462,15 +1564,15 @@
 			<div class="encounter_record">
 				<div class="encounter_formation"><img/></div>
 				<div class="encounter_ships">
-					
+
 				</div>
 				<div class="clear"></div>
 			</div>
 			<!-- Clonable: encounted ship -->
 			<div class="encounter_ship hover"><img/></div>
 		</div>
-		
-		
+
+
 		<script type="text/javascript" src="../../../../assets/js/global.js"></script>
 		<script type="text/javascript" src="../../../../assets/js/Dexie.min.js"></script>
 		<script type="text/javascript" src="../../../../assets/js/FileSaver.min.js"></script>
@@ -1478,10 +1580,10 @@
 		<script type="text/javascript" src="../../../../assets/js/jquery.min.js"></script>
 		<!-- @nonbuildend -->
 		<script type="text/javascript" src="../../../../assets/js/jquery-ui.min.js"></script>
-		
+
 		<!-- @buildimportjs ../../../../library/objects.js -->
 		<!-- @buildimportjs ../../../../library/managers.js -->
-		
+
 		<!-- @nonbuildstart -->
 		<script type="text/javascript" src="../../../../library/objects/Node.js"></script>
 		<script type="text/javascript" src="../../../../library/objects/Fleet.js"></script>
@@ -1499,7 +1601,7 @@
 		<script type="text/javascript" src="../../../../library/objects/Timer.js"></script>
 		<script type="text/javascript" src="../../../../library/objects/LandBase.js"></script>
 		<!-- @nonbuildend -->
-		
+
 		<!-- @nonbuildstart -->
 		<script type="text/javascript" src="../../../../library/managers/ConfigManager.js"></script>
 		<script type="text/javascript" src="../../../../library/managers/GearManager.js"></script>
@@ -1510,7 +1612,7 @@
 		<script type="text/javascript" src="../../../../library/managers/TimerManager.js"></script>
 		<script type="text/javascript" src="../../../../library/managers/CalculatorManager.js"></script>
 		<!-- @nonbuildend -->
-		
+
 		<script type="text/javascript" src="../../../../library/modules/PoiDBSubmission.js"></script>
 		<script type="text/javascript" src="../../../../library/modules/OpenDBSubmission.js"></script>
 		<script type="text/javascript" src="../../../../library/modules/TsunDBSubmission.js"></script>
@@ -1534,7 +1636,7 @@
 		<script type="text/javascript" src="../../../../library/modules/AntiAir.js"></script>
 		<script type="text/javascript" src="../../../../library/helpers/KanColleHelpers.js"></script>
 		<script type="text/javascript" src="../../../../library/helpers/ExpeditionHelper.js"></script>
-		
+
 		<script type="text/javascript" src="js/Shipbox.js"></script>
 		<script type="text/javascript" src="natsuiro.js"></script>
 	</body>

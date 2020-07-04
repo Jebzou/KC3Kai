@@ -185,6 +185,11 @@ AntiAir: anti-air related calculations
 		return [300, 301].indexOf(mst.api_id) !== -1;
 	}
 
+	function is20tube7inchUPRocketLaunchers(mst) {
+		// 20-tube 7inch UP Rocket Launchers
+		return mst.api_id === 301;
+	}
+
 	function isBritishAAGun(mst) {
 		// QF 2-pounder Octuple Pom-pom Gun Mount
 		return [191].indexOf(mst.api_id) !== -1;
@@ -196,6 +201,15 @@ AntiAir: anti-air related calculations
 	var is5inchSingleMountKaiWithGfcs = masterIdEq(308);
 	// 5inch Single Gun Mount Mk.30 Kai
 	var is5inchSingleMountKai = masterIdEq(313);
+	// 5inch Single Gun Mount Mk.30 or +Kai
+	function is5inchSingleMountOrKai(mst) {
+		return [284, 313].indexOf(mst.api_id) !== -1;
+	}
+
+	// 5inch Twin Dual-purpose Gun Mount (Concentrated Deployment)
+	var is5inchTwinDualMountCD = masterIdEq(362);
+	// GFCS Mk.37 + 5inch Twin Dual-purpose Gun Mount (Concentrated Deployment)
+	var is5inchTwinDualMountCDWithGfcs = masterIdEq(363);
 
 	// for equipments the coefficient is different for
 	// calculating adjusted ship AA stat and fleet AA stat,
@@ -485,8 +499,8 @@ AntiAir: anti-air related calculations
 				82, // Jervis Class
 				88, // Nelson Class
 			].indexOf( mst.api_ctype ) !== -1 ||
-			// Kongou Class Kai Ni, Kongou K2C
-			[149, 150, 151, 152, 591].indexOf( mst.api_id ) !== -1;
+			// Kongou Class Kai Ni, K2C
+			[149, 150, 151, 152, 591, 592].indexOf( mst.api_id ) !== -1;
 	}
 
 	function masterIdEq( n ) {
@@ -525,20 +539,22 @@ AntiAir: anti-air related calculations
 		gotlandKaiIcon = 579,
 		johnstonIcon = 562,
 		fletcherIcon = 596,
+		atlantaIcon = 597,
 		haMountIcon = 16,
 		radarIcon = 11,
 		aaFdIcon = 30,
 		aaGunIcon = 15,
 		lcMainGunIcon = 3,
 		type3ShellIcon = 12,
-		// Special combined icons for Build-in HA / CDMG
+		// Special combined icons for Build-in HA / CDMG / etc
 		biHaMountIcon = "16+30",    // HA plus AAFD
 		cdmgIcon = "15+15",         // AAGun double
 		haMountNbifdIcon = "16-30", // HA without AAFD
 		aaGunNotCdIcon = "15-15",   // Non-CD AA Machine Gun
 		aaGunK2RockeLaunIcon = "15+31", // 12cm 30tube Rocket Launcher Kai 2
 		haMountKaiAmg = "16+15",    // 10cm Twin High-angle Mount Kai + Additional Machine Gun
-		haMountKaiRadar = "16+11";  // 5inch Single Gun Mount Mk.30 Kai + GFCS Mk.37
+		haMountKaiRadar = "16+11",  // 5inch Single Gun Mount Mk.30 Kai + GFCS Mk.37 / GFCS Mk.37 + next one
+		haMountCdIcon = "16+16";  // 5inch Twin Dual-purpose Gun Mount (Concentrated Deployment)
 
 	var isMusashiK2 = masterIdEq( musashiK2Icon );
 	var isMayaK2 = masterIdEq( mayaK2Icon );
@@ -555,7 +571,9 @@ AntiAir: anti-air related calculations
 	var isIsokazeBk = masterIdEq( isokazeBkIcon );
 	var isHamakazeBk = masterIdEq( hamakazeBkIcon );
 	var isGotlandKai = masterIdEq( gotlandKaiIcon );
-	var isFletcherClass = ctypeIdEq(91);
+	var isFletcherClass = ctypeIdEq( 91 );
+	var isAtlantaClass = ctypeIdEq( 99 );
+	var isYuubariK2 = masterIdEq( 622 );
 
 
 	// turns a "shipObj" into the list of her equipments
@@ -804,11 +822,11 @@ AntiAir: anti-air related calculations
 		)
 	);
 
-	// Kasumi K2B
+	// Kasumi K2B, Yuubari K2
 	declareAACI(
 		16, 4, 1.4,
 		[kasumiK2BIcon, haMountIcon, aaGunIcon, radarIcon],
-		predAllOf(isKasumiK2B),
+		predAnyOf(isKasumiK2B, isYuubariK2),
 		withEquipmentMsts(
 			predAllOf(
 				hasSome( isHighAngleMount ),
@@ -937,6 +955,7 @@ AntiAir: anti-air related calculations
 
 	// British-relevant ships
 	//   Known for now: Nelson, Warspite, Ark Royal, Jervis, all Kongou-class K2
+	// (QF2 + FCR) OR (QF2 + 7UP) OR (7UP + 7UP)
 	declareAACI(
 		32, 3, 1.2,
 		[warspiteIcon, aaGunK2RockeLaunIcon, cdmgIcon],
@@ -947,7 +966,7 @@ AntiAir: anti-air related calculations
 					hasSome( isBritishRocketLauncher ),
 					hasSome( isBritishAAGun )),
 				predAllOf(
-					hasAtLeast( isBritishRocketLauncher, 2 ))
+					hasAtLeast( is20tube7inchUPRocketLaunchers, 2 ))
 			)
 		)
 	);
@@ -967,7 +986,7 @@ AntiAir: anti-air related calculations
 	// Fletcher-class all forms (Fletcher, Johnston)
 	declareAACI(
 		34, 7, 1.6,
-		[johnstonIcon, haMountKaiRadar, haMountKaiRadar],
+		[fletcherIcon, haMountKaiRadar, haMountKaiRadar],
 		predAllOf(isFletcherClass),
 		withEquipmentMsts(
 			predAllOf(
@@ -976,32 +995,86 @@ AntiAir: anti-air related calculations
 	);
 	declareAACI(
 		35, 6, 1.55,
-		[johnstonIcon, haMountKaiRadar, haMountIcon],
+		[fletcherIcon, haMountKaiRadar, haMountIcon],
 		predAllOf(isFletcherClass),
 		withEquipmentMsts(
-			predAllOf(
-				hasSome( is5inchSingleMountKaiWithGfcs ),
-				hasSome( is5inchSingleMountKai ))
+			predAnyOf(
+				hasAtLeast( is5inchSingleMountKaiWithGfcs, 2 ),
+				predAllOf(
+					hasSome( is5inchSingleMountOrKai ),
+					hasSome( is5inchSingleMountKaiWithGfcs ))
+			)
 		)
 	);
 	declareAACI(
 		36, 6, 1.55,
-		[johnstonIcon, haMountIcon, haMountIcon, radarIcon],
+		[fletcherIcon, haMountIcon, haMountIcon, radarIcon],
 		// there are enough slots for Kai only
 		predAllOf(isFletcherClass, slotNumAtLeast(3)),
 		withEquipmentMsts(
 			predAllOf(
-				hasAtLeast( is5inchSingleMountKai, 2 ),
+				predAnyOf(
+					hasAtLeast( is5inchSingleMountOrKai, 2 ),
+					hasAtLeast( is5inchSingleMountKaiWithGfcs, 2 ),
+					predAllOf(
+						hasSome( is5inchSingleMountOrKai ),
+						hasSome( is5inchSingleMountKaiWithGfcs ))
+				),
 				hasSome( isGfcsRadar ))
 		)
 	);
 	declareAACI(
 		37, 4, 1.45,
-		[johnstonIcon, haMountIcon, haMountIcon],
+		[fletcherIcon, haMountIcon, haMountIcon],
 		predAllOf(isFletcherClass),
 		withEquipmentMsts(
+			predAnyOf(
+				hasAtLeast( is5inchSingleMountKai, 2 ),
+				hasAtLeast( is5inchSingleMountKaiWithGfcs, 2 ),
+				predAllOf(
+					hasSome( is5inchSingleMountKai ),
+					hasSome( is5inchSingleMountKaiWithGfcs ))
+			)
+		)
+	);
+
+	// Atlanta-class
+	declareAACI(
+		39, 10, 1.7,
+		[atlantaIcon, haMountKaiRadar, haMountCdIcon],
+		predAllOf(isAtlantaClass),
+		withEquipmentMsts(
 			predAllOf(
-				hasAtLeast( is5inchSingleMountKai, 2 ))
+				hasSome( is5inchTwinDualMountCDWithGfcs ),
+				hasSome( is5inchTwinDualMountCD ))
+		)
+	);
+	declareAACI(
+		40, 10, 1.7,
+		[atlantaIcon, haMountCdIcon, haMountCdIcon, radarIcon],
+		predAllOf(isAtlantaClass),
+		withEquipmentMsts(
+			predAllOf(
+				predAnyOf(
+					hasAtLeast( is5inchTwinDualMountCD, 2 ),
+					predAllOf(
+						hasSome( is5inchTwinDualMountCD ),
+						hasSome( is5inchTwinDualMountCDWithGfcs ))
+				),
+				hasSome( isGfcsRadar ))
+		)
+	);
+	declareAACI(
+		41, 9, 1.65,
+		[atlantaIcon, haMountCdIcon, haMountCdIcon],
+		predAllOf(isAtlantaClass),
+		withEquipmentMsts(
+			predAnyOf(
+				hasAtLeast( is5inchTwinDualMountCD, 2 ),
+				predAllOf(
+					hasSome( is5inchTwinDualMountCD ),
+					hasSome( is5inchTwinDualMountCDWithGfcs ))
+			)
 		)
 	);
 

@@ -52,6 +52,7 @@ Retrieves when needed to apply on components
 				PushAlerts_enabled   : 0,
 				PushAlerts_key       : '',
 
+				info_quest_activity  : true,
 				info_face            : true,
 				info_drop            : true,
 				info_craft           : true,
@@ -91,6 +92,7 @@ Retrieves when needed to apply on components
 				ss_quality   : 90,
 				ss_directory : 'KanColle',
 				ss_dppx      : 1,
+				ss_smooth    : true,
 
 				alert_diff         : 59,
 				alert_morale_notif : true,
@@ -172,10 +174,16 @@ Retrieves when needed to apply on components
 				pan_ship_icon_bg_moon: "rgba(0, 42, 134, 0)",
 				pan_ship_icon_border: "rgba(34, 65, 105, 1)",
 				pan_ship_icon_border_moon: "rgba(34, 65, 105, 0)",
-				pan_outline_moon: "rgba(68, 34, 68, 1)",
-				pan_outline_bright_moon: "rgba(140, 140, 192, 1)",
+				pan_outline_moon: "rgba(0, 130, 130, 0.5)",
+				pan_outline_bright_moon: "rgba(0, 190, 190, 0.5)",
 				moon_small_font: false,
 				moon_lighting_effect: true,
+				pan_moon_element_shape: "shape_round",
+				pan_moon_bar_style: "fluid",
+				pan_moon_bar_shape: "shape_round",
+				pan_moon_bar_colors: "clrdim",
+				pan_moon_conbut_shape: "shape_round",
+				pan_moon_conbut_skew: true,
 				pan_custom_css  : "",
 				pan_custom_css_moon  : "",
 
@@ -306,7 +314,7 @@ Retrieves when needed to apply on components
 		
 		// Current maximum pages of HQ info
 		getMaxHqInfoPage :function(){
-			return 3;
+			return 4;
 		},
 		
 		// Toggle HQ Info Page

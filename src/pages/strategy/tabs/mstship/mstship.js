@@ -244,9 +244,7 @@
 			
 			// Show damaged CG of shipgirl or abyssal boss
 			$(".tab_mstship .shipInfo .cgswf .dmg_mode").on("click", function(e){
-				if(!KC3Master.isSeasonalShip(self.currentShipId)){
-					self.showShip(self.currentShipId, true, false);
-				}
+				self.showShip(self.currentShipId, true, false);
 			});
 			
 			// View all CG types
@@ -424,14 +422,14 @@
 				KC3Master.isAbyssalShip(ship_id) || viewCgMode ? "full" :
 				"card";
 			var kcs2Src = `http://${this.server_ip}/kcs2/resources` +
-				KC3Master.png_file(ship_id, cgType, "ship", tryDamagedGraph && !KC3Master.isSeasonalShip(ship_id));
+				KC3Master.png_file(ship_id, cgType, "ship", tryDamagedGraph);
 			if(this.currentCardVersion) kcs2Src += `?version=${this.currentCardVersion}`;
 			
 			if(this.croppie) this.croppie.croppie("destroy");
 			if(showAllGraphs){
 				$(".tab_mstship .shipInfo .cgswf").hide();
 				const cgList = $('<div class="cglist"></div>').appendTo(".tab_mstship .shipInfo .basic");
-				// To avoid loading seasonal image types not existed,
+				// To avoid loading seasonal image types not existed (no card and damaged basically),
 				// see `ShipLoader.prototype.getSpecificAlbumImageLoadList`
 				const isSpecificAlbumTypes = [
 					5026, 5027, 5256, 5269, 5275, 5276, 5277, 5278, 5279, 5280,
@@ -439,8 +437,13 @@
 					5291, 5292, 5293, 5294, 5295, 5296, 5297, 5298, 5299, 5300,
 					5301, 5302, 5303, 5304, 5305, 5306, 5357,
 				].includes(ship_id);
+				// No card but has damaged image
+				const isSpButHasTaiha = [5269, 5357].includes(ship_id);
 				const availableTypes = KC3Master.isSeasonalShip(ship_id) ?
-					isSpecificAlbumTypes ? ['character_full', 'character_up'] : [
+					isSpecificAlbumTypes ? isSpButHasTaiha ? [
+						'character_full', 'character_full_dmg',
+						'character_up', 'character_up_dmg'
+					] : ['character_full', 'character_up'] : [
 						'card', 'character_full', 'character_full_dmg',
 						'character_up', 'character_up_dmg'
 					] : KC3Master.isAbyssalShip(ship_id) ?
@@ -469,7 +472,9 @@
 					$(this).unbind("error");
 					// Hide optional debuffed abyssal boss alt lines,
 					// since damaged boss state can be only determined via battle API `api_xal01` property.
-					if($(this).attr("title").endsWith("_d")) $(this).hide();
+					// And _dmg images are not available since boss 1846
+					const typeTip = $(this).attr("title");
+					if(typeTip.endsWith("_d") || typeTip.endsWith("_dmg")) $(this).hide();
 				};
 				availableTypes.forEach(type => {
 					// Old suffix for debuffed boss CG used still, see `ShipLoader.hasai` & `hSuffix()`
@@ -601,6 +606,8 @@
 				
 				var stockEquipments = WhoCallsTheFleetDb.getStockEquipment( ship_id );
 				var remodelInfo = RemodelDb.remodelInfo( ship_id ) || {};
+				var shipOriginId = RemodelDb.originOf(ship_id);
+
 				
 				// EQUIPMENT
 				$(".tab_mstship .equipments .equipment").each(function(index){
@@ -901,8 +908,9 @@
 				const synergyList = bonusDefs.synergyGears;
 				
 				const ensureArray = array => Array.isArray(array) ? array : [array];
-				const checkBonusExtraRequirements = (bonusDef, shipId, ctype, stype) => {
+				const checkBonusExtraRequirements = (bonusDef, shipId, originId, ctype, stype) => {
 					if (bonusDef.excludes && bonusDef.excludes.includes(shipId)) { return false; }
+					if (bonusDef.excludeOrigins && bonusDef.excludeOrigins.includes(originId)) { return false; }
 					if (bonusDef.excludeClasses && bonusDef.excludeClasses.includes(ctype)) { return false; }
 					if (bonusDef.excludeStypes && bonusDef.excludeStypes.includes(stype)) { return false; }
 					if (bonusDef.remodel || bonusDef.remodelCap) {
@@ -911,20 +919,29 @@
 						if(remodelGroup.indexOf(shipId) > bonusDef.remodelCap) { return false; }
 					}
 					if (bonusDef.stypes && !bonusDef.stypes.includes(stype)) { return false; }
+					if (bonusDef.origins && !bonusDef.origins.includes(originId)) { return false; }
+					if (bonusDef.ids && !bonusDef.ids.includes(shipId)) { return false; }
 					return true;
 				};
-				const checkByShipBonusDef = (bonusDef, shipId, stype, gearType2) => (
-					(bonusDef.ids && bonusDef.ids.includes(shipId)) ||
-					(bonusDef.stypes && bonusDef.stypes.includes(stype)
-						&& KC3Master.equip_type(stype, shipId).includes(gearType2)) ||
-					(bonusDef.excludes && !bonusDef.bonusDef.includes(shipId)) ||
-					(bonusDef.excludeStypes && !bonusDef.excludeStypes.includes(stype)
-						&& KC3Master.equip_type(stype, shipId).includes(gearType2)) ||
-					(!bonusDef.ids && !bonusDef.stypes && !bonusDef.excludes && !bonusDef.excludeStypes
-						&& KC3Master.equip_type(stype, shipId).includes(gearType2))
+				const checkByShipBonusDef = (bonusDef, shipId, originId, stype, ctype, gearType2) => (
+					(Array.isArray(gearType2) ?
+						gearType2.some(id => KC3Master.equip_type(stype, shipId).includes(id)) :
+						KC3Master.equip_type(stype, shipId).includes(gearType2)
+					) && (
+						(bonusDef.ids && bonusDef.ids.includes(shipId)) ||
+						(bonusDef.origins && bonusDef.origins.includes(originId)) ||
+						(bonusDef.stypes && bonusDef.stypes.includes(stype)) ||
+						(bonusDef.classes && bonusDef.classes.includes(ctype)) ||
+						(bonusDef.excludes && !bonusDef.excludes.includes(shipId)) ||
+						(bonusDef.excludeOrigins && !bonusDef.excludeOrigins.includes(originId)) ||
+						(bonusDef.excludeStypes && !bonusDef.excludeStypes.includes(stype)) ||
+						(bonusDef.excludeClasses && !bonusDef.excludeClasses.includes(ctype)) ||
+						(!bonusDef.ids && !bonusDef.origins && !bonusDef.stypes && !bonusDef.classes
+							&& !bonusDef.excludes && !bonusDef.excludeOrigins && !bonusDef.excludeStypes && !bonusDef.excludeClasses)
+					)
 				);
-				const checkByShipBonusRequirements = (byShip, shipId, stype, gearType2) =>
-					ensureArray(byShip).some(bonusDef => checkByShipBonusDef(bonusDef, shipId, stype, gearType2));
+				const checkByShipBonusRequirements = (byShip, shipId, originId, stype, ctype, gearType2) =>
+					ensureArray(byShip).some(bonusDef => checkByShipBonusDef(bonusDef, shipId, originId, stype, ctype, gearType2));
 				const addObjects = (obj1, obj2) => {
 					for (const key in obj2) {
 						obj1[key] = obj1[key] ? obj1[key] + obj2[key] : obj2[key];
@@ -951,12 +968,13 @@
 				for (const mstId in bonusDefs) {
 					const def = bonusDefs[mstId];
 					let bonus = {};
-					const gearType2 = mstId.startsWith("t2_") ?
+					const gearType2 = mstId.startsWith("t3_") ?
+						KC3Meta.itemTypesByType3(Number(mstId.substr(3))) : mstId.startsWith("t2_") ?
 						Number(mstId.substr(3)) : Number.isInteger(Number(mstId)) ?
 						KC3Master.slotitem(mstId).api_type[2] : 0;
 					if (def.byClass && Object.keys(def.byClass).includes(String(shipData.api_ctype))) {
 						bonus = Object.assign(bonus, def);
-					} else if (def.byShip && checkByShipBonusRequirements(def.byShip, shipData.api_id, shipData.api_stype, gearType2)) {
+					} else if (def.byShip && checkByShipBonusRequirements(def.byShip, shipData.api_id, shipOriginId, shipData.api_stype, shipData.api_ctype, gearType2)) {
 						bonus = Object.assign(bonus, def);
 					}
 					if (Object.keys(bonus).length) {
@@ -975,9 +993,10 @@
 							if (typeof classBonus !== "object") { classBonus = gear.byClass[classBonus]; }
 							classBonus = ensureArray(classBonus);
 							classBonus.forEach(bonus => {
-								if (checkBonusExtraRequirements(bonus, shipData.api_id, shipData.api_ctype, shipData.api_stype) && !bonus.minCount) {
+								if (checkBonusExtraRequirements(bonus, shipData.api_id, shipOriginId, shipData.api_ctype, shipData.api_stype) && !bonus.minCount) {
 									found = true;
 									if (!bonus.minStars) {
+						// TODO: for all following `.single || .multiple`, should merge them instead of OR, and show a 'one-time' indicator
 										bonusStats = bonus.single || bonus.multiple;
 										totalStats = addObjects(totalStats, bonusStats);
 										if (bonus.synergy) { synergyGear.push(bonus.synergy); }
@@ -1000,11 +1019,12 @@
 						}
 						// Ship bonuses
 						if (gear.byShip) {
-							const gearType2 = gear.id.startsWith("t2_") ?
+							const gearType2 = gear.id.startsWith("t3_") ?
+								KC3Meta.itemTypesByType3(Number(gear.id.substr(3))) : gear.id.startsWith("t2_") ?
 								Number(gear.id.substr(3)) : Number.isInteger(Number(gear.id)) ?
 								KC3Master.slotitem(gear.id).api_type[2] : 0;
 							const list = ensureArray(gear.byShip).filter(bonusDef =>
-								checkByShipBonusDef(bonusDef, shipData.api_id, shipData.api_stype, gearType2));
+								checkByShipBonusDef(bonusDef, shipData.api_id, shipOriginId, shipData.api_stype, shipData.api_ctype, gearType2));
 							list.forEach(shipBonus => {
 								found = true;
 								if (!shipBonus.minStars) {
@@ -1039,6 +1059,16 @@
 								const allGears = KC3Master.all_slotitems();
 								const matchedGearNames = Object.keys(allGears).filter(
 									id => !KC3Master.isAbyssalGear(id) && allGears[id].api_type[2] == typeId
+								).map(id => KC3Meta.gearName(allGears[id].api_name)).join("\n");
+								$(".gearName", gearBox).text(typeName).attr("title", matchedGearNames);
+							} else if (gear.id.startsWith("t3_")) {
+								const iconId = gear.id.substr(3);
+								const typeName = KC3Meta.gearTypeName(3, iconId);
+								$(".gearId", gearBox).text(`[I${iconId}]`);
+								$(".gearIcon img", gearBox).attr("src", KC3Meta.itemIcon(iconId));
+								const allGears = KC3Master.all_slotitems();
+								const matchedGearNames = Object.keys(allGears).filter(
+									id => !KC3Master.isAbyssalGear(id) && allGears[id].api_type[3] == iconId
 								).map(id => KC3Meta.gearName(allGears[id].api_name)).join("\n");
 								$(".gearName", gearBox).text(typeName).attr("title", matchedGearNames);
 							} else {
@@ -1080,7 +1110,10 @@
 										const synergyName = (idList && idList.length === 1) ?
 											KC3Meta.gearName(KC3Master.slotitem(idList[0]).api_name) :
 											KC3Meta.term(flag.toCamelCase(true));
-										$(".synergyType", synergyFlag).html(synergyName);
+										const synergyNameList = idList.map(id =>
+											`[${id}] ${KC3Meta.gearName(KC3Master.slotitem(id).api_name)}`);
+										$(".synergyType", synergyFlag).html(synergyName)
+											.attr("title", synergyNameList.join("\n"));
 										$(".synergyFlags", synergyBox).append(synergyFlag);
 									});
 									
@@ -1157,54 +1190,15 @@
 					$(".tab_mstship .shipInfo .encounter").toggle(!!enemyDbStats);
 					if(enemyDbStats || abyssDb){
 						$(".tab_mstship .shipInfo .stats").empty();
-						$.each([
-							["hp", "taik", "ShipHp"],
-							["fp", "houg", "ShipFire"],
-							["ar", "souk", "ShipArmor"],
-							["tp", "raig", "ShipTorpedo"],
-							["aa", "tyku", "ShipAntiAir"],
-							["sp", "soku", "ShipSpeed"],
-							["if", "airpow"],
-						], function(index, stat){
-							statBox = $(".tab_mstship .factory .ship_stat").clone();
-							$("img", statBox).attr("src", KC3Meta.statIcon(stat[0]));
-							$(".ship_stat_name", statBox).text(stat[1])
-								.attr("title", KC3Meta.term(stat[2]) || "")
-								.lazyInitTooltip();
-							if(stat[0]=="sp"){
-								var speedEnNameMap = {"0":"Land","5":"Slow","10":"Fast","15":"Fast+","20":"Fastest"};
-								$(".ship_stat_text", statBox).text(speedEnNameMap[shipData.api_soku]);
-								$(".ship_stat_text", statBox).show();
-								$(".ship_stat_value", statBox).hide();
-							} else if(stat[0]=="if"){
-								// Compute fighter air power based on known slots
-								$(".ship_stat_min", statBox).text(
-									KC3Calc.enemyFighterPower([abyssMaster.api_id])[0] || 0
-								);
-								$(".ship_stat_max", statBox).hide();
-							} else {
-								$(".ship_stat_min", statBox).text(
-									// Priority to show stats recorded via encounter
-									enemyDbStats ? enemyDbStats[stat[0]] : abyssMaster["api_" + stat[1]]
-								);
-								$(".ship_stat_max", statBox).hide();
-								// Check diff for updating `abyssal_stats.json`
-								if(enemyDbStats && (!abyssDb ||
-									typeof abyssDb["api_" + stat[1]] === "undefined" ||
-									enemyDbStats[stat[0]] != abyssDb["api_" + stat[1]])){
-									// Different color to indicate stats attribute to be updated
-									$(".ship_stat_min", statBox).html(
-										$("<span style='color:orangered'></span>").text($(".ship_stat_min", statBox).text())
-									).attr("title",
-										"{0} => {1}".format(abyssDb["api_" + stat[1]], enemyDbStats[stat[0]])
-									);
-								}
-							}
-							statBox.appendTo(".tab_mstship .shipInfo .stats");
-						});
-						
-						// ENEMY EQUIPMENT
 						$(".tab_mstship .shipInfo .stats").css("width", "220px");
+						// ENEMY EQUIPMENT
+						const equipMasters = [];
+						const sumEquipTotalStat = statName => equipMasters.reduce((total, mst) => (
+							total + (mst && mst.api_id > 0 ? mst[`api_${statName}`] || 0 : 0)
+						), 0);
+						const maxEquipStat = statName => Math.max(...equipMasters.map(mst => (
+							mst && mst.api_id > 0 ? mst[`api_${statName}`] || 0 : 0
+						)));
 						$(".tab_mstship .equipments .equipment").each(function(index){
 							$(this).show();
 							let maxeq;
@@ -1217,9 +1211,10 @@
 							// Priority to show equipment recorded via encounter
 							const equipId = enemyDbStats ? enemyDbStats["eq"+(index+1)] : (abyssMaster.kc3_slots || [])[index];
 							if (equipId > 0) {
-								const equipment = KC3Master.slotitem( equipId );
+								const equipment = KC3Master.slotitem(equipId);
+								equipMasters.push(equipment);
 								const fakeGear = new KC3Gear({ itemId: 2, masterId: equipId });
-								$(".slotitem", this).text(KC3Meta.gearName( equipment.api_name ) )
+								$(".slotitem", this).text(KC3Meta.gearName(equipment.api_name))
 									.attr("title", fakeGear.htmlTooltip(maxeq))
 									.lazyInitTooltip();
 								$(".sloticon img", this)
@@ -1241,6 +1236,94 @@
 								$(".sloticon img", this).hide().off("click");
 								$(".sloticon", this).removeClass("hover");
 							}
+						});
+						
+						// ENEMY STATS
+						$.each([
+							["hp", "taik", "ShipHp"],
+							["fp", "houg", "ShipFire"],
+							["ar", "souk", "ShipArmor"],
+							["tp", "raig", "ShipTorpedo"],
+							["aa", "tyku", "ShipAntiAir"],
+							["as", "tais", "ShipAsw"/*, "kc3_asw"*/],
+							["ev", "houk", "ShipEvasion"/*, "kc3_evas"*/],
+							["ht", "houm", "ShipAccuracy"/*, "kc3_tacc"*/],
+							["ls", "saku", "ShipLos"/*, "kc3_los"*/],
+							["sp", "soku", "ShipSpeed"],
+							["rn", "leng", "ShipLength"],
+							["if", "airpow"],
+						], function(index, stat){
+							statBox = $(".tab_mstship .factory .ship_stat").clone();
+							$("img", statBox).attr("src", KC3Meta.statIcon(stat[0]));
+							$(".ship_stat_name", statBox).text(stat[1])
+								.attr("title", KC3Meta.term(stat[2]) || "")
+								.lazyInitTooltip();
+							if(stat[0] === "sp"){
+								const speedEnNameMap = {"0":"Land","5":"Slow","10":"Fast","15":"Fast+","20":"Fastest"};
+								$(".ship_stat_text", statBox).text(
+									speedEnNameMap[abyssMaster.api_soku] || abyssMaster.api_soku
+								).attr("title", abyssMaster.api_soku);
+								$(".ship_stat_text", statBox).show();
+								$(".ship_stat_value", statBox).hide();
+							} else if(stat[0] === "rn"){
+								const rangeEnNames = ["","Short","Medium","Long","V.Long","V.Long+"];
+								const masterLeng = abyssMaster.api_leng,
+									maxLengFromEquips = !equipMasters.length ? 0 : maxEquipStat("leng"),
+									maxLeng = Math.max(masterLeng, maxLengFromEquips);
+								$(".ship_stat_text", statBox).text(
+									rangeEnNames[maxLeng] || "None"
+								).attr("title", "{0} = max({1}, {2})"
+									.format(maxLeng, masterLeng, maxLengFromEquips)
+								);
+								$(".ship_stat_text", statBox).show();
+								$(".ship_stat_value", statBox).hide();
+								$(".ship_stat_min", statBox).text(masterLeng);
+								$(".ship_stat_max span", statBox).text(maxLengFromEquips);
+								// Different color to indicate mismatched values between internal and max of equipment
+								if(maxLengFromEquips > 0 && masterLeng !== maxLengFromEquips){
+									$(".ship_stat_text", statBox).css("color",
+										masterLeng > maxLengFromEquips ? "blue" : "orangered");
+								}
+							} else if(stat[0] === "if"){
+								// Compute fighter air power based on known slots
+								$(".ship_stat_min", statBox).text(
+									KC3Calc.enemyFighterPower([abyssMaster.api_id])[0] || 0
+								);
+								$(".ship_stat_max", statBox).hide();
+							} else {
+								// Priority to show master stats recorded by encounters db
+								let masterStat = enemyDbStats ? enemyDbStats[stat[0]] : abyssMaster["api_" + stat[1]];
+								// Show those hidden stats in db partially, but not included in master data
+								let isUnknownStat = false;
+								if(masterStat === undefined && !!stat[3]) {
+									masterStat = abyssMaster[stat[3]] || undefined;
+									isUnknownStat = true;
+								}
+								if(masterStat === undefined){
+									$(".ship_stat_min", statBox).text("-");
+									masterStat = 0;
+									isUnknownStat = true;
+								} else {
+									$(".ship_stat_min", statBox).text(masterStat);
+								}
+								if(!equipMasters.length || stat[0] === "hp"){
+									$(".ship_stat_max", statBox).hide();
+								} else {
+									$(".ship_stat_max span", statBox).text(masterStat + sumEquipTotalStat(stat[1]));
+								}
+								// Check diff for updating internal db: `abyssal_stats.json`
+								if(!isUnknownStat && enemyDbStats && (!abyssDb ||
+									typeof abyssDb["api_" + stat[1]] === "undefined" ||
+									enemyDbStats[stat[0]] != abyssDb["api_" + stat[1]])){
+									// Different color to indicate stats attribute to be updated
+									$(".ship_stat_min", statBox).html(
+										$("<span style='color:orangered'></span>").text($(".ship_stat_min", statBox).text())
+									).attr("title",
+										"{0} => {1}".format(abyssDb["api_" + stat[1]], enemyDbStats[stat[0]])
+									);
+								}
+							}
+							statBox.appendTo(".tab_mstship .shipInfo .stats");
 						});
 						
 						$(".tab_mstship .shipInfo .stats").show();

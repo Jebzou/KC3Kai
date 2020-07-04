@@ -150,10 +150,19 @@ Used by SortieManager
 		currentMap.clear |= (++currentMap.kills) >= KC3Meta.gauge(mapKey);
 		KC3SortieManager.setCurrentMapData(currentMap);
 		
-		// Bq3: Sortie 2 BBV/AO to [W1-6], reach node N twice
-		if(KC3SortieManager.isSortieAt(1, 6)
-			&& KC3QuestManager.isPrerequisiteFulfilled(861)){
-			KC3QuestManager.get(861).increment();
+		if(KC3SortieManager.isSortieAt(1, 6)){
+			// Bq3: Sortie 2 BBV/AO to [W1-6], reach node N twice
+			if(KC3QuestManager.isPrerequisiteFulfilled(861)){
+				KC3QuestManager.get(861).increment();
+			}
+			// By2: 5th requirement: reach [W1-6] node N once
+			if(KC3QuestManager.isPrerequisiteFulfilled(905)){
+				KC3QuestManager.get(905).increment(4);
+			}
+			// By3: 5th requirement: reach [W1-6] node N once
+			if(KC3QuestManager.isPrerequisiteFulfilled(912)){
+				KC3QuestManager.get(912).increment(4);
+			}
 		}
 		return this;
 	};
@@ -1984,12 +1993,14 @@ Used by SortieManager
 		isRealBattle = true) {
 		const unexpectedList = [];
 		let sunkenShips = 0;
+		let shipCount = PlayerManager.fleets[fleetnum].ships.filter(id => id > 0).length;
 		predictedFleet.forEach(({ attacks }, position) => {
 			let ship = PlayerManager.fleets[fleetnum].ship(position);
 
 			// SHIP SIMULATION FOR SORTIE HISTORY
 			if (!isRealBattle && KC3Node.debugPrediction() && this.nodeData.id) {
 				position = position + sunkenShips;
+				shipCount = this.nodeData["fleet" + (fleetnum + 1)].length;
 				let shipData = this.nodeData["fleet" + (fleetnum + 1)][position];
 				while(this.sunken && this.sunken[this.playerCombined ? fleetnum : 0].includes(shipData.mst_id)) {
 					sunkenShips++;
@@ -2145,6 +2156,21 @@ Used by SortieManager
 						// Artillery spotting will keep re-rolling sp attacks
 						daySpecialAttackType = KC3Ship.specialAttackTypeDay(cutin);
 					}
+					// CVCI modifier correction for cutin type
+					if (cutin === 7) {
+						if (ciequip.length === 2) { daySpecialAttackType[3] = 1.15; }
+						else {
+							let torpedoBomberCnt = 0, 
+								diveBomberCnt = 0;
+							ciequip.forEach(slotitem => {
+								const master = KC3Master.slotitem(slotitem);
+								if (!master) { return; }
+								if (master.api_type[2] === 7) { diveBomberCnt++; }
+								else if (master.api_type[2] === 8) { torpedoBomberCnt++; }
+							});
+							if (torpedoBomberCnt === 1 && diveBomberCnt === 2) { daySpecialAttackType[3] = 1.2; }
+						}
+					}
 				}
 				
 				const combinedFleetType = this.playerCombinedType || PlayerManager.combinedFleet || 0;
@@ -2216,6 +2242,7 @@ Used by SortieManager
 								slots: ship.slots,
 								stats: ship.nakedStats(),
 								position: position,
+								shipCount: shipCount,
 								formation: formation,
 								isMainFleet: !this.playerCombined ? true : fleetnum == 0,
 								combinedFleet: combinedFleetType,
